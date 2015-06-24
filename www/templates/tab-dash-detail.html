@@ -1,0 +1,49 @@
+<ion-view view-title="Detalle Inmueble" ng-init="loadMap">
+  <ion-content>
+    <div class="list card">
+
+      <div class="item item-divider">
+        <!--<img src="{{product.image['1080x1440'][0].url}}">-->
+        <h2>{{product.houseType}} en {{product.leaseType}} </h2>
+        <p><b>Fecha Publicacion: </b>{{product.registerDate}}</p>
+        <p><b>Vistas: </b>120</p>
+      </div>
+      <div class="item item-text-wrap">
+        <img class="full-image" src="{{product.image['1080x1440'][0].url}}">
+        <p>{{product.zone}}</p>
+        <p><b>Precio: </b>{{product.price}}</p>
+        <p><b>Superficie: </b>{{product.surface}}</p>
+        <p><b>Sup. Construida: </b>{{product.surfaceBuild}}</p>
+        <p><b>Descripcion: </b>{{product.description}}</p>
+        
+        <p>
+          <a href="#" class="subdued">Agregar a favoritos</a>|
+          <a href="#" class="subdued">Compartir</a>
+        </p>
+      </div>
+        <!--
+        <img class="full-image" src="{{product.image_urls['300x400'][0].url}}">-->
+
+        <!--<img src="data:image/jpg;base64,{{product.photo}}" style="max-width: 100%;" ng-if="(product.photo != '')">-->
+
+      <div class="item tabs tabs-secondary tabs-icon-left">
+        <a class="tab-item" href="#">
+          <i class="icon ion-document-text"></i>
+          Descripcion
+        </a>
+        <a class="tab-item" href="#">
+          <i class="icon ion-ios-location"></i>
+          Ubicacion
+        </a>
+        <a class="tab-item" href="#">
+          <i class="icon ion-person"></i>
+          Contacto
+        </a>
+      </div>
+
+    </div>
+
+    <div id="map1" class="map" data-tap-disabled="true"></div>
+  </ion-content>
+</ion-view>
+
