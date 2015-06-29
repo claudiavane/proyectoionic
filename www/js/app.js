@@ -23,8 +23,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     $rootScope.token = null;
 
 
-    //$rootScope.refirebase = new Firebase("https://shining-inferno-7335.firebaseio.com");
-    $rootScope.refirebase = new Firebase("https://sweltering-inferno-1375.firebaseio.com");
+    $rootScope.refirebase = new Firebase("https://shining-inferno-7335.firebaseio.com");
+    //$rootScope.refirebase = new Firebase("https://sweltering-inferno-1375.firebaseio.com");
 
     //var authRef = new Firebase($rootScope.baseUrl);
     //$rootScope.auth = $firebaseAuth(authRef);
@@ -177,6 +177,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     controller: 'SignInCtrl'
   })
 
+
   .state('tab.sign-up', {
     url: '/sign-up',
     views: {
@@ -186,42 +187,44 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       }
     }
   })
-
-  .state('tab.chats', {
-      url: '/chats',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
-        }
-      }
-    })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
-
+  
   .state('tab.account', {
     url: '/account',
     views: {
       'tab-account': {
         templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
+        controller: 'DashFormCtrl'
       }
     }
   })
-  
+
   .state('tab.map', {
-    url: '/map',
+    url: '/map/:productId',
     views: {
-      'tab-map': {
+      'tab-dash': {
         templateUrl: 'templates/tab-map.html',
         controller: 'MapCtrl'
+      }
+    }
+  })
+
+ 
+  .state('tab.contact', {
+    url: '/contact/:productId',
+    views: {
+      'tab-dash': {
+        templateUrl: 'templates/tab-contact.html',
+        controller: 'ContactCtrl'
+      }
+    }
+  })  
+
+  .state('tab.configuration', {
+    url: '/configuration',
+    views: {
+      'tab-configuration': {
+        templateUrl: 'templates/tab-configuration.html',
+        controller: 'ConfigCtrl'
       }
     }
   });

@@ -25,17 +25,22 @@ angular.module('starter.controllers', ['firebase','ngCordova','ionic.service.cor
     //$scope.$broadcast('scroll.infiniteScrollComplete')
   }
 
-	//$scope.products = [{'name':'Iphone', 'prices': 78.10, 'img':'http://www.att.com/wireless/iphone/assets/207138-iPhone6-device2.jpg'}, {'name':'Samsung', 'prices': 78.10, 'img': 'http://www.att.com/wireless/iphone/assets/207138-iPhone6-device2.jpg'}] 
 })
 
 .controller('DashFormCtrl', function($scope, $firebaseArray, $rootScope, $state, $cordovaCamera, $cordovaGeolocation) {
+     
+      if (!$rootScope.userSignedIn()){
+        $state.go('sign-in');
+      } 
 
+      $scope.refire = new Firebase("https://sweltering-inferno-1375.firebaseio.com");
 
-    $scope.product = {name: '', sale_price: '', content: {description: ''}, photo: '', lat: -17.37, long: -66.15};
+      //$scope.product = {name: '', sale_price: '', content: {description: ''}, photo: '', lat: -17.37, long: -66.15};
 
+      //$scope.product = {city: '', description: '', houseId: '', houseType: '', leaseType: '', location: {latitude: -17.37, longitude: -66.15}, price: '', registerDate: '', status: 'Activo', surface: '', surfaceBuild: '', userId: '1', zone: ''};
+      $scope.product = {city: '', description: '', houseId: '', houseType: '',image:{img1080x1440:[{height:'',url:'http://i.imgur.com/6u9VgMe.jpg',width:''}], img300x400:[{height:'',url:'http://i.imgur.com/6u9VgMe.jpg',width:''}]}, leaseType: '', location: {latitude: -17.37, longitude: -66.15}, price: '', registerDate: '', status: 'Activo', surface: '', surfaceBuild: '', userId: '1', zone: ''};
 
       var myLatlng = new google.maps.LatLng(-17.37, -66.15);
-
       var mapOptions = {
           center: myLatlng,
           zoom: 16,
@@ -44,7 +49,6 @@ angular.module('starter.controllers', ['firebase','ngCordova','ionic.service.cor
 
       var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-
       var marker = new google.maps.Marker({
               position: new google.maps.LatLng(-17.37, -66.15),
               map: map,
@@ -52,48 +56,41 @@ angular.module('starter.controllers', ['firebase','ngCordova','ionic.service.cor
               options: { draggable: true }
       });
 
+      var posOptions = {timeout: 10000, enableHighAccuracy: false};
 
-
-
-
-
-
-    var posOptions = {timeout: 10000, enableHighAccuracy: false};
-
-    $cordovaGeolocation
-    .getCurrentPosition(posOptions)
-    .then(function (position) {
-      console.log(position);
-      $scope.product.lat  = position.coords.latitude
-      $scope.product.long = position.coords.longitude
+      $cordovaGeolocation
+      .getCurrentPosition(posOptions)
+      .then(function (position) {
+        console.log(position);
+        $scope.product.location.latitude  = position.coords.latitude
+        $scope.product.location.longitude = position.coords.longitude
 
       map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
           
       marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 
-    }, function(err) {
-        console.log(err);
-    });
+      }, function(err) {
+          console.log(err);
+      });
 
+      var watchOptions = {
+        frequency : 1000,
+        timeout : 3000,
+        enableHighAccuracy: false // may cause errors if true
+      };
 
-    var watchOptions = {
-      frequency : 1000,
-      timeout : 3000,
-      enableHighAccuracy: false // may cause errors if true
-    };
+      var watch = $cordovaGeolocation.watchPosition(watchOptions);
+      watch.then(
+        null,
+        function(err) {
+          console.log(err);
+        },
+        function(position) {
+          console.log(position);
+          $scope.product.location.latitude  = position.coords.latitude;
+          $scope.product.location.longitude = position.coords.longitude;
 
-    var watch = $cordovaGeolocation.watchPosition(watchOptions);
-    watch.then(
-      null,
-      function(err) {
-        console.log(err);
-      },
-      function(position) {
-        console.log(position);
-        $scope.product.lat  = position.coords.latitude;
-        $scope.product.long = position.coords.longitude;
-
-        marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+          marker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 
     });
 
@@ -103,14 +100,13 @@ angular.module('starter.controllers', ['firebase','ngCordova','ionic.service.cor
           watch.clearWatch();
           var pos = marker.getPosition();
           console.log(pos);
-          $scope.product.lat  = pos.A;
-          $scope.product.long = pos.F;
+          $scope.product.location.latitude  = pos.A;
+          $scope.product.location.longitude = pos.F;
         });
     });
 
 
     //document.addEventListener("deviceready", function () {
-
     $scope.takePicture = function() {
           var options = {
               quality : 75,
@@ -137,87 +133,35 @@ angular.module('starter.controllers', ['firebase','ngCordova','ionic.service.cor
     //}, false);
 
     $scope.uploadProduct = function() {
-      var productRef =  $rootScope.refirebase.child("products").push($scope.product);
+
+      var productRef =  $scope.refire.push($scope.product);
+      console.log($scope.product.location.latitude);
+
       var productId = productRef.key();
       console.log(productId);
-      $state.go('tab.dash-detail',{productId: productId});
+      $state.go('tab.dash');
     }
-
-
 })
-.controller('ChatsCtrl', function($scope, Chats, $rootScope, $state, $ionicHistory) {
 
-  if (!$rootScope.userSignedIn()){
-    $ionicHistory.nextViewOptions({
-      disableAnimate: true,
-      disableBack: true
-    });
-  	$state.go('sign-in');
-  }
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  }
-})
 
 .controller('DashDetailCtrl', function($scope, $stateParams, $firebaseObject) {
 
-	//var ref = new Firebase("https://shining-inferno-7335.firebaseio.com/products/"+$stateParams.productId);
-
   var ref = new Firebase("https://sweltering-inferno-1375.firebaseio.com/"+$stateParams.productId);
-
-
 	$scope.product = $firebaseObject(ref);
 
-  $scope.product.$loaded().then(function() {
-    $scope.loadMap();
-  });
-
-	console.log($scope.product);
-
-
-  $scope.loadMap = function(){
-
-    console.log("Producto");
-    console.log($scope.product);
-
-    console.log($scope.product.lat);
-    console.log($scope.product.long);
-
-    var myLatlng = new google.maps.LatLng($scope.product.lat, $scope.product.long);
-
-    console.log(myLatlng);
-
-    var mapOptions = {
-        center: myLatlng,
-        zoom: 16,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-
-    var map = new google.maps.Map(document.getElementById("map1"), mapOptions);
-
-    var marker = new google.maps.Marker({
-            position: new google.maps.LatLng($scope.product.lat, $scope.product.long),
-            map: map,
-            title: $scope.product.name
-    });
-  }
-
+  console.log($scope.product);  
+  
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
 
 .controller('SignInCtrl', ['$scope', '$rootScope', '$window', '$localstorage' , '$ionicUser', 
   function ($scope, $rootScope, $window, $localstorage, $ionicUser) {
-     // check session
+
      //$rootScope.checkSession();
      $scope.user = {
         email: "",
         password: ""
      };
-
 
      $scope.validateUser = function () {
         $rootScope.show('Please wait.. Authenticating');
@@ -260,7 +204,7 @@ angular.module('starter.controllers', ['firebase','ngCordova','ionic.service.cor
                   console.log("Error identify User");
                   console.log(err);
               });;
-              $window.location.href = ('#/tabs/dash');
+              $window.location.href = ('#/tab/account');
           }
         }
         $rootScope.refirebase.authWithPassword({
@@ -281,9 +225,7 @@ angular.module('starter.controllers', ['firebase','ngCordova','ionic.service.cor
       };
 
       $scope.createUser = function () {
- 
-		var ref = new Firebase("https://shining-inferno-7335.firebaseio.com");
-
+  		var ref = new Firebase("https://shining-inferno-7335.firebaseio.com");
 
         if (!$scope.user.email || !$scope.user.password) {
           $rootScope.notify("Please enter valid credentials");
@@ -321,16 +263,54 @@ angular.module('starter.controllers', ['firebase','ngCordova','ionic.service.cor
   ])
 
 
-.controller('AccountCtrl', function($scope, $rootScope, $state) {
-  if (!$rootScope.userSignedIn()){
-  	$state.go('sign-in');
+.controller('MapCtrl', function($scope, $rootScope, $stateParams, $firebaseObject) {
+  var ref = new Firebase("https://sweltering-inferno-1375.firebaseio.com/"+$stateParams.productId);
+  $scope.product = $firebaseObject(ref);
+
+  $scope.product.$loaded().then(function() {
+    $scope.loadMap();
+  });
+
+  $scope.loadMap = function(){
+
+    var myLatlng = new google.maps.LatLng($scope.product.location.latitude, $scope.product.location.longitude);
+
+    console.log(myLatlng);
+
+    var mapOptions = {
+        center: myLatlng,
+        zoom: 16,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    var map = new google.maps.Map(document.getElementById("map1"), mapOptions);
+
+    console.log($scope.product.location.latitude);
+    console.log($scope.product.location.longitude);
+
+    var marker = new google.maps.Marker({
+            position: new google.maps.LatLng($scope.product.location.latitude, $scope.product.location.longitude),
+            map: map,
+            title: $scope.product.zone
+    });
   }
-  $scope.settings = {
-    enableFriends: true
-  };
+
 })
 
-.controller('MapCtrl', function($scope, $rootScope, $state) {
+
+.controller('ContactCtrl', function($scope, $stateParams, $firebaseObject) {
+  //$rootScope.notify($stateParams.productId);
+  //$state.go('sign-in');
+  var ref = new Firebase("https://sweltering-inferno-1375.firebaseio.com/"+$stateParams.productId);
+  $scope.product = $firebaseObject(ref);
+  console.log($scope.product);
+})
+
+
+.controller('ConfigCtrl', function($scope, $rootScope, $state) {
+      if (!$rootScope.userSignedIn()){
+        $state.go('sign-in');
+      } 
 
 
 })

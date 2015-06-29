@@ -1,5 +1,5 @@
 <ion-view view-title="Detalle Inmueble" ng-init="loadMap">
-  <ion-content>
+  <ion-content scroll="true">
     <div class="list card">
 
       <div class="item item-divider">
@@ -9,41 +9,33 @@
         <p><b>Vistas: </b>120</p>
       </div>
       <div class="item item-text-wrap">
-        <img class="full-image" src="{{product.image['1080x1440'][0].url}}">
-        <p>{{product.zone}}</p>
+        <img class="full-image" src="{{product.image['img1080x1440'][0].url}}">
+        <p><b>{{product.city}}: </b>{{product.zone}}</p>
         <p><b>Precio: </b>{{product.price}}</p>
         <p><b>Superficie: </b>{{product.surface}}</p>
         <p><b>Sup. Construida: </b>{{product.surfaceBuild}}</p>
         <p><b>Descripcion: </b>{{product.description}}</p>
-        
         <p>
-          <a href="#" class="subdued">Agregar a favoritos</a>|
-          <a href="#" class="subdued">Compartir</a>
+          <a href="#" class="button icon-left ion-star button-clear button-darck">Agregar a favoritos</a> 
+          <a href="#" class="button icon-left ion-android-share-alt button-clear button-darck">Compartir</a>
         </p>
       </div>
-        <!--
-        <img class="full-image" src="{{product.image_urls['300x400'][0].url}}">-->
-
-        <!--<img src="data:image/jpg;base64,{{product.photo}}" style="max-width: 100%;" ng-if="(product.photo != '')">-->
 
       <div class="item tabs tabs-secondary tabs-icon-left">
-        <a class="tab-item" href="#">
-          <i class="icon ion-document-text"></i>
+        <a class="tab-item active" href="#">
+          <i class="icon ion-document-text" ></i>
           Descripcion
         </a>
-        <a class="tab-item" href="#">
+        <a class="tab-item" href="#/tab/map/{{product.$id}}">
           <i class="icon ion-ios-location"></i>
           Ubicacion
         </a>
-        <a class="tab-item" href="#">
+        <a class="tab-item" href="#/tab/contact/{{product.$id}}" >
           <i class="icon ion-person"></i>
           Contacto
         </a>
-      </div>
-
+      </div>      
     </div>
-
-    <div id="map1" class="map" data-tap-disabled="true"></div>
   </ion-content>
 </ion-view>
 

@@ -1,0 +1,17 @@
+<ion-view view-title="Configuracion">
+  <ion-content>
+    <div class="list list-inset">
+      <label class="item item-input item-select">
+        <span class="input-label">Moneda:</span>
+        <select ng-model="product.money">
+          <option>Bolivianos Bs.</option>
+          <option>Euros €</option>
+          <option>Dolar $</option>
+        </select>
+      </label>
+      <button class="button button-block button-assertive" ng-click="saveConfig()">
+        Guardar
+      </button>
+    </div>
+  </ion-content>
+</ion-view>

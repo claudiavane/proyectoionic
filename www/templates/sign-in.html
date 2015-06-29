@@ -1,20 +1,18 @@
-<ion-view view-title="Sign-In">
+<ion-view view-title="Inicio Sesion">
   <ion-content>
-      <div class="list">
-      <label class="item item-input">
-        <span class="input-label" >Email</span>
-        <input type="text" ng-model="user.email">
+      <div class="list list-inset">
+      <label class="item item-input">        
+        <input type="text" ng-model="user.email" placeholder="Email">
       </label>
-      <label class="item item-input">
-        <span class="input-label" >Password</span>
-        <input type="password" ng-model="user.password">
+      <label class="item item-input">        
+        <input type="password" ng-model="user.password" placeholder="Password">
       </label>
       <label class="item">
-        <button class="button button-block button-positive" ng-click="validateUser()">
-          Sign In
+        <button class="button button-block button-assertive" ng-click="validateUser()">
+          Iniciar Sesion
         </button>
       </label>
-      <a class="item button button-clear button-positive" href="#/tab/sign-up"> <small> if not registered sign up</small></a>
+      <a class="item button button-clear button-assertive" href="#/tab/sign-up"> <small> Registrarse</small></a>
     </div>
   </ion-content>
 </ion-view>
